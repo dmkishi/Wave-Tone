@@ -1,65 +1,66 @@
-/* GLOBAL CONSTANTS ========================================================= */
-const MAX_VOLUME = 0.05;
-const MIN_VOLUME = 0;
-const MIN_FREQ   = 2600;
-const MAX_FREQ   = 5200;
+// GLOBAL CONSTANTS ============================================================
+const MIN_VOLUME     = 0;
+const MAX_VOLUME     = 1;
+const DEFAULT_VOLUME = 0.25;
+const MIN_FREQ       = 2600;
+const MAX_FREQ       = 5200;
+const DEFAULT_FREQ   = MIN_FREQ;
 
 
 
-/* INITIALIZE WEB AUDIO ===================================================== */
+// INITIALIZE WEB AUDIO ========================================================
 var context = new (window.AudioContext || window.webkitAudioContext)();
 
 var osc                 = context.createOscillator();
     osc.type            = 'sine';
-    osc.frequency.value = 400; // Arbituary but we need a value
+    osc.frequency.value = DEFAULT_FREQ;
 
 var gain = context.createGain();
-    gain.gain.value = MAX_VOLUME;
+    gain.gain.value = DEFAULT_VOLUME;
 
 osc.connect(gain);
 gain.connect(context.destination);
 
 
 
-/* MASTER CONTROLS ========================================================== */
-// The master switch (a) starts the oscillator then (b) definitively deactivates
-// it, ceasing all signal processing. In order to reenable it, the page must be
-// refreshed. For temporarily pausing the tone, use the volume switch below.
+// MASTER SWITCH ===============================================================
+// The master switch, on first press, initiates the tone generator, then, when
+// clicked again, definitively deactivates all signal processing, saving CPU
+// loads. In order to reenable it, the page must be refreshed. For temporarily 
+// pausing the tone, use the volume switch below.
 $('.js-switch--input').change(function() {
   if ($(this).prop('checked')) {
     $('.js-volume').removeClass('volume__disabled');
     $('.js-volume--input').prop({'disabled': false, 'checked': true});
-
     osc.start(0);
   } else {
     $(this).prop('disabled', true);
     $('.js-volume--input').prop({'disabled': true, 'checked': false});
     $('.js-switch').addClass('switch__disabled');
     $('.js-volume').addClass('volume__disabled');
-
     osc.stop(0);
     window.ondeviceorientation = null;
     window.ondevicemotion      = null;
   }
 });
 
-// Master Volume
-$('.js-volume--input').click(function() {
-  gain.gain.value = ($(this).prop('checked')) ? MAX_VOLUME : MIN_VOLUME;
-});
 
 
+// TONE CONTROLS ===============================================================
+// Volume ----------------------------------------------------------------------
+var vol_input  = document.getElementById('js-vol--input'),
+    vol_output = document.getElementById('js-vol--value');
+
+vol_input.onchange = function() {
+  gain.gain.value      = this.valueAsNumber / 100;
+  vol_output.innerHTML = this.valueAsNumber;
+}
 
 
-/* TONE CONTROLS ============================================================ */
-const PITCH_MIN = 0,
-      PITCH_MAX = 90;
-
-
+// Tone ------------------------------------------------------------------------
 Math.toRadian = function(degree) {
   return degree * (Math.PI / 180);
 };
-
 
 var min_input        = document.getElementById('js-min-freq--input'),
     max_input        = document.getElementById('js-max-freq--input'),
@@ -77,12 +78,12 @@ var freq_delta = max_freq - min_freq;
 
 
 min_input.onchange = function() {
-  min_output.innerHTML = min_freq = min_input.valueAsNumber;
+  min_output.innerHTML = min_freq = this.valueAsNumber;
   freq_delta = max_freq - min_freq;
 };
 
 max_input.onchange = function() {
-  max_output.innerHTML = max_freq = max_input.valueAsNumber;
+  max_output.innerHTML = max_freq = this.valueAsNumber;
   freq_delta = max_freq - min_freq;
 };
 

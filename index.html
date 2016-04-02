@@ -12,19 +12,19 @@
       <h1>Wave Tone</h1>
 
       <div class="table" data-ui-component="Master">
-        <h2>Master</h2>
         <div class="table-row [ switch js-switch ]">
           <label class="table-cell switch--label">Master Switch:</label>
           <input class="js-switch--input" type="checkbox">
-        </div>
-        <div class="table-row [ volume volume__disabled js-volume ]">
-          <label class="table-cell volume--label">Master Volume:</label>
-          <input class="js-volume--input" type="checkbox" disabled>
         </div>
       </div>
 
       <div class="table" data-ui-component="Tone">
         <h2>Tone</h2>
+        <div class="table-row">
+          <label class="table-cell">Volume:</label>
+          <input id="js-vol--input" class="table-cell" type="range" value="25" min="0" max="100" step="5">
+          <output class="table-cell"><span id="js-vol--value">25</span>%</output>
+        </div>
         <div class="table-row">
           <label class="table-cell">Minimum Frequency:</label>
           <input id="js-min-freq--input" class="table-cell" type="range" value="2600" min="400" max="10000" step="10">
