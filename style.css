@@ -1,0 +1,13 @@
+/* Ultra-minimal stylesheet, i.e. no normalize.css, no box-sizing, nothing. */
+
+.table       { display: table; }
+.table-row   { display: table-row; }
+.table-cell  { display: table-cell; padding-right: .25em; }
+
+h1 { font-style: italic; }
+h2 { font-size: 21px; }
+h1, h2 { margin: .75em 0 0; }
+ul { margin: 0; padding: 0; }
+
+.switch__disabled > .switch--label,
+.volume__disabled > .volume--label { opacity: .33; }
