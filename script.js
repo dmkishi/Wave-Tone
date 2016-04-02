@@ -1,19 +1,18 @@
-// GLOBAL CONSTANTS ============================================================
-const MIN_VOLUME     = 0;
-const MAX_VOLUME     = 1;
-const DEFAULT_VOLUME = 0.25;
-const MIN_FREQ       = 2600;
-const MAX_FREQ       = 5200;
-const DEFAULT_FREQ   = MIN_FREQ;
+// CONSTANTS ===================================================================
+const MIN_VOLUME       = 0;
+const MAX_VOLUME       = 1;
+
+const DEFAULT_VOLUME   = 0.25;
 
 
 
-// INITIALIZE WEB AUDIO ========================================================
+// INIT ========================================================================
+// Web Audio Nodes -------------------------------------------------------------
 var context = new (window.AudioContext || window.webkitAudioContext)();
 
 var osc                 = context.createOscillator();
     osc.type            = 'sine';
-    osc.frequency.value = DEFAULT_FREQ;
+    osc.frequency.value = 1;  // Value is irrelavant, must simply exist
 
 var gain = context.createGain();
     gain.gain.value = DEFAULT_VOLUME;
@@ -30,15 +29,11 @@ gain.connect(context.destination);
 // pausing the tone, use the volume switch below.
 $('.js-switch--input').change(function() {
   if ($(this).prop('checked')) {
-    $('.js-volume').removeClass('volume__disabled');
-    $('.js-volume--input').prop({'disabled': false, 'checked': true});
     osc.start(0);
   } else {
-    $(this).prop('disabled', true);
-    $('.js-volume--input').prop({'disabled': true, 'checked': false});
-    $('.js-switch').addClass('switch__disabled');
-    $('.js-volume').addClass('volume__disabled');
     osc.stop(0);
+    $(this).prop('disabled', true);
+    $('.js-switch').addClass('switch__disabled');
     window.ondeviceorientation = null;
     window.ondevicemotion      = null;
   }
