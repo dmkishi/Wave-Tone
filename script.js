@@ -58,10 +58,6 @@ vol_input.onchange = function() {
 
 
 // Tone ------------------------------------------------------------------------
-Math.toRadian = function(degree) {
-  return degree * (Math.PI / 180);
-};
-
 var min_input        = document.getElementById('js-min-freq--input'),
     max_input        = document.getElementById('js-max-freq--input'),
     min_output       = document.getElementById('js-min-freq--value'),
@@ -70,11 +66,15 @@ var min_input        = document.getElementById('js-min-freq--input'),
     slope_output     = document.getElementById('slope-output'),
     frequency_output = document.getElementById('frequency-output');
 
-var min_freq = min_input.valueAsNumber,
-    max_freq = max_input.valueAsNumber,
+var min_freq   = min_input.valueAsNumber,
+    max_freq   = max_input.valueAsNumber,
+    freq_delta = max_freq - min_freq,
     degree, slope, frequency;
 
-var freq_delta = max_freq - min_freq;
+
+Math.toRadian = function(degree) {
+  return degree * (Math.PI / 180);
+};
 
 
 min_input.onchange = function() {
@@ -87,8 +87,8 @@ max_input.onchange = function() {
   freq_delta = max_freq - min_freq;
 };
 
-window.ondeviceorientation = function (e) {
-  degree              = degree_output.innerHTML    = e.beta;
+window.ondeviceorientation = function (evt) {
+  degree              = degree_output.innerHTML    = evt.beta;
   slope               = slope_output.innerHTML     = Math.sin(Math.toRadian(degree));
   osc.frequency.value = frequency_output.innerHTML = min_freq + (freq_delta * Math.abs(slope));
 };
